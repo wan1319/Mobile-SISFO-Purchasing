@@ -1,14 +1,16 @@
 import _ from "lodash";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Alert, SafeAreaView } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Text, TextInput } from "react-native-paper";
 import WidgetBaseLogo from "../../widgets/base/WidgetBaseLogo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ServiceUserLogin } from "../../services/ServiceUser";
+import WidgetBaseLoader from "../../widgets/base/WidgetBaseLoader";
+import { ContextUserAuthentication } from "../../context/ContextUser";
 
 const ScreenUserLogin = ({ navigation }) => {
-    // const [, setIsAuthenticated] = useContext(ContextUserAuthentication)
+    const [, setIsAuthenticated] = useContext(ContextUserAuthentication);
     const [user, setUser] = useState({
         email: "",
         password: "",
@@ -20,12 +22,20 @@ const ScreenUserLogin = ({ navigation }) => {
     };
 
     const userLogin = () => {
-        ServiceUserLogin(user)
-            .then(async (token) => {
-                await AsyncStorage.setItem("@token", token);
-                Alert.alert("Berhasil", "Anda sudah berhasil Login");
-            })
-            .catch((error) => console.log(error));
+        setComplete(false);
+        const debounce = _.debounce(() => {
+            ServiceUserLogin(user)
+                .then(async (token) => {
+                    await AsyncStorage.setItem("@token", token);
+                    Alert.alert("Berhasil", "Anda sudah berhasil Login");
+                    setIsAuthenticated(true);
+                })
+                .catch((error) => console.log(error))
+                .finally(() => {
+                    setComplete(true);
+                });
+        }, 500);
+        debounce();
     };
 
     useEffect(() => {
@@ -33,7 +43,6 @@ const ScreenUserLogin = ({ navigation }) => {
         const debounce = _.debounce(() => {
             setComplete(true);
         }, 500);
-
         debounce();
     }, []);
 
@@ -71,6 +80,7 @@ const ScreenUserLogin = ({ navigation }) => {
                     </Button>
                 </ScrollView>
             )}
+            <WidgetBaseLoader complete={complete} />
         </SafeAreaView>
     );
 };

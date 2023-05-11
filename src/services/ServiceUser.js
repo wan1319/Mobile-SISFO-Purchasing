@@ -10,3 +10,13 @@ export const ServiceUserLogin = (payload) => {
             .catch((error) => reject(error));
     });
 };
+
+export const ServiceUserRegister = (payload) => {
+    return new Promise((resolve, reject) => {
+        ServiceBaseRequest.post(`${CONFIG_BASE_API_URL}/user/register`, payload)
+            .then((response) => {
+                resolve(response.data);
+            })
+            .catch((error) => reject(error));
+    });
+};
