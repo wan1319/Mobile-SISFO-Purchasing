@@ -1,17 +1,17 @@
-import { ActivityIndicator, MD2Colors, Modal } from "react-native-paper";
+import { ActivityIndicator, MD2Colors, Modal, Text } from "react-native-paper";
 import { StyleSheet } from "react-native";
 
-const WidgetBaseLoader = (complete) => {
+const WidgetBaseLoader = ({complete}) => {
     if (!complete) {
         return (
             <Modal animationType="fade" style={styles.container} visible={!complete}>
                 <ActivityIndicator
                     size={32}
                     animating={true}
-                    color={MD2Colors.deepPurple600}
+                    color={MD2Colors.white}
                 />
                 <Text style={{ color: MD2Colors.deepOrange50, paddingVertical: 32 }}>
-                    Waiting moment...
+                    Wait for a moment...
                 </Text>
             </Modal>
         );

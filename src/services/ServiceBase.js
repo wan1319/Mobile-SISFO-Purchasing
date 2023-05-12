@@ -22,6 +22,20 @@ ServiceBaseRequest.interceptors.response.use(
             let messages = error.response.data.errors;
             console.log(messages);
         }
+        if (
+            error &&
+            error.response &&
+            error.response.data &&
+            error.response.data.errors
+        ) {
+            let messages = error.response.data.errors
+                .map((item) => {
+                    return `${item.path}: ${item.msg}`;
+                })
+                .join(`\n`);
+
+            Alert.alert("Ups!", messages);
+        }
         return Promise.reject(error);
     }
 );
