@@ -1,24 +1,28 @@
-import _ from "lodash";
 import { useEffect, useState } from "react";
-import { ServicePemasokCreate } from "../../services/ServicePemasok";
 import { Appbar, Button, TextInput } from "react-native-paper";
-import SchemaPemasok from "../../schema/SchemaPemasok";
+import {
+    ServicePemasokDelete,
+    ServicePemasokEdit,
+} from "../../services/ServicePemasok";
+import { Alert, SafeAreaView, View } from "react-native";
+import _ from "lodash";
 import WidgetBaseLoader from "../../widgets/base/WidgetBaseLoader";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
-const ScreenPemasokCreate = ({ navigation }) => {
-    const [pemasok, setPemasok] = useState(SchemaPemasok);
+const ScreenPemasokEdit = ({ navigation, route }) => {
     const [complete, setComplete] = useState(false);
+    const [pemasok, setPemasok] = useState({});
 
     const handleInput = (name, value) => {
         setPemasok((values) => ({ ...values, [name]: value }));
     };
 
-    const pemasokCreate = () => {
+    const pemasokEdit = () => {
         setComplete(false);
         const debounce = _.debounce(() => {
-            ServicePemasokCreate(pemasok)
+            ServicePemasokEdit(pemasok)
                 .then(() => {
+                    Alert.alert("Notifikasi", "Berhasil");
                     navigation.goBack();
                 })
                 .catch((error) => {
@@ -26,20 +30,55 @@ const ScreenPemasokCreate = ({ navigation }) => {
                 })
                 .finally(() => setComplete(true));
         }, 1000);
+
+        debounce();
+    };
+
+    const askDelete = () => {
+        const actions = [
+            {
+                text: "Yes",
+                onPress: () => pemasokDelete(),
+            },
+            {
+                text: "Cancel",
+                style: "cancel",
+            },
+        ];
+
+        Alert.alert("Konfirmasi", "Ingin dihapus?", actions);
+    };
+
+    const pemasokDelete = () => {
+        const debounce = _.debounce(() => {
+            ServicePemasokDelete(pemasok.kodePemasok)
+                .then(() => {
+                    Alert.alert("Notifikasi", "Berhasil");
+                    navigation.goBack();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }, 100);
+
         debounce();
     };
 
     useEffect(() => {
         setComplete(false);
-        const debounce = _.debounce(() => setComplete(true), 1000);
+        const debounce = _.debounce(() => {
+            setPemasok(route.params.pemasok);
+            setComplete(true);
+        }, 1000);
         debounce();
-    }, []);
+    }, [route.params.pemasok]);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => navigation.goBack()} />
-                <Appbar.Content title="Add Pemasok" />
+                <Appbar.Content title="Edit Pemasok" />
+                <Appbar.Action icon="trash-can-outline" onPress={askDelete} />
             </Appbar.Header>
 
             {complete && (
@@ -50,12 +89,11 @@ const ScreenPemasokCreate = ({ navigation }) => {
                     }}>
                     <View style={{ gap: 24 }}>
                         <TextInput
-                            mode="outlined"
                             value={pemasok.kodePemasok || ""}
                             onChangeText={(text) => handleInput("kodePemasok", text)}
                             label="Kode Pemasok"
+                            disabled
                         />
-
                         <TextInput
                             mode="outlined"
                             value={pemasok.namaPemasok || ""}
@@ -77,16 +115,15 @@ const ScreenPemasokCreate = ({ navigation }) => {
                             keyboardType={"numeric"}
                             label="Telepon Pemasok"
                         />
-                        <Button onPress={pemasokCreate} mode="contained">
-                            Simpan
+                        <Button onPress={pemasokEdit} mode="contained">
+                            Simpan Perubahan
                         </Button>
                     </View>
                 </ScrollView>
             )}
-
             <WidgetBaseLoader complete={complete} />
         </SafeAreaView>
     );
 };
 
-export default ScreenPemasokCreate;
+export default ScreenPemasokEdit;
