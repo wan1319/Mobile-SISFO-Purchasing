@@ -4,15 +4,16 @@ import { Appbar, List } from "react-native-paper";
 import { ContextUserAuthentication } from "../../context/ContextUser";
 
 const ScreenUserSetting = ({ navigation }) => {
-    const [complete, setComplete] = useState(false);
-    const [, setIsAuthenticated] = useContext(ContextUserAuthentication);
+  const [complete, setComplete] = useState(false);
+  const [, setIsAuthenticated] = useContext(ContextUserAuthentication);
 
-    return(
-        <SafeAreaView style={{ flex: 1 }}>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
       <Appbar.Header>
-        <Appbar.BackAction
+        <Appbar.Action
+          icon="menu"
           onPress={() => {
-            navigation.goBack();
+            navigation.toggleDrawer();
           }}
         />
         <Appbar.Content title="Settings" />
@@ -29,7 +30,7 @@ const ScreenUserSetting = ({ navigation }) => {
         />
       </ScrollView>
     </SafeAreaView>
-    );
+  );
 };
 
 export default ScreenUserSetting;

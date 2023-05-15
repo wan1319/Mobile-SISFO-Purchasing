@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Alert } from "react-native";
 
 export const ServiceBaseRequest = axios.create({
     timeout: 1000,

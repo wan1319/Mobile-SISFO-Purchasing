@@ -7,17 +7,10 @@ import { ContextUserAuthentication } from "../../context/ContextUser";
 import { Text } from "react-native";
 import WidgetBaseSidebar from "./WidgetBaseSidebar";
 import { RouterBarangAuthenticated } from "../../routers/RouterBarang";
+import { RouterPemasokAuthenticated } from "../../routers/RouterPemasok";
 
 const Drawer = createDrawerNavigator();
 
-const ScreenContoh = () => {
-    const [, setIsAuthenticated] = React.useContext(ContextUserAuthentication);
-    return (
-        <Text style={{ marginTop: 40 }} onPress={() => setIsAuthenticated(false)}>
-            Hello Ini sudah login
-        </Text>
-    );
-};
 
 export default function WidgetBaseDrawer() {
     const [isAuthenticated, setIsAuthenticated] =
@@ -54,11 +47,19 @@ export default function WidgetBaseDrawer() {
                             />
                             <Drawer.Screen
                                 options={{
+                                    drawerLabel: "Pemasok",
+                                }}
+                                name="RouterPemasok"
+                                component={RouterPemasokAuthenticated}
+                            />
+                            <Drawer.Screen
+                                options={{
                                     drawerLabel: "Settings",
                                 }}
                                 name="RouterUser"
                                 component={RouterUserAuthenticated}
                             />
+                            
                         </>
                     )}
                 </Drawer.Navigator>
