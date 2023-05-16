@@ -89,18 +89,21 @@ const ScreenBarangEdit = ({ navigation, route }) => {
           }}>
           <View style={{ gap: 24 }}>
             <TextInput
+              mode="outlined"
               value={barang.kodeBarang || ""}
               onChangeText={(text) => handleInput("kodeBarang", text)}
               label="Kode Barang"
               disabled
             />
             <TextInput
+              mode="outlined"
               value={barang.namaBarang || ""}
               onChangeText={(text) => handleInput("namaBarang", text)}
               label="Nama Barang"
             />
 
             <TextInput
+              mode="outlined"
               value={`${barang.hargaBeli || ""}`}
               onChangeText={(text) => handleInput("hargaBeli", parseInt(text))}
               keyboardType={"numeric"}
@@ -108,6 +111,7 @@ const ScreenBarangEdit = ({ navigation, route }) => {
             />
 
             <TextInput
+              mode="outlined"
               value={`${barang.hargaJual || ""}`}
               onChangeText={(text) => handleInput("hargaJual", parseInt(text))}
               keyboardType={"numeric"}
@@ -115,6 +119,7 @@ const ScreenBarangEdit = ({ navigation, route }) => {
             />
 
             <TextInput
+              mode="outlined"
               value={`${barang.jumlahBarang || ""}`}
               onChangeText={(text) =>
                 handleInput("jumlahBarang", parseInt(text))

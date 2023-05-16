@@ -1,92 +1,84 @@
-import _ from "lodash";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import SchemaPemasok from "../../schema/SchemaPemasok";
+import { useFocusEffect } from "@react-navigation/native";
 import { ServicePemasokCreate } from "../../services/ServicePemasok";
 import { Appbar, Button, TextInput } from "react-native-paper";
-import SchemaPemasok from "../../schema/SchemaPemasok";
 import WidgetBaseLoader from "../../widgets/base/WidgetBaseLoader";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 
-const ScreenPemasokCreate = ({ navigation }) => {
-    const [pemasok, setPemasok] = useState(SchemaPemasok);
-    const [complete, setComplete] = useState(false);
+const ScreenPemasokCreate = ({ navigation, route }) => {
+  const [pemasok, setPemasok] = useState(SchemaPemasok);
+  const [complete, setComplete] = useState(false);
 
-    const handleInput = (name, value) => {
-        setPemasok((values) => ({ ...values, [name]: value }));
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const time = setTimeout(() => {
+        setComplete(true);
+      }, 1000);
+    }, [])
+  );
 
-    const pemasokCreate = () => {
-        setComplete(false);
-        const debounce = _.debounce(() => {
-            ServicePemasokCreate(pemasok)
-                .then(() => {
-                    navigation.goBack();
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-                .finally(() => setComplete(true));
-        }, 1000);
-        debounce();
-    };
+  const handleInput = (name, value) => {
+    setPemasok((values) => ({ ...values, [name]: value }));
+  };
 
-    useEffect(() => {
-        setComplete(false);
-        const debounce = _.debounce(() => setComplete(true), 1000);
-        debounce();
-    }, []);
+  const handleServicePemasokCreate = () => {
+    ServicePemasokCreate(pemasok)
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch(() => {});
+  };
 
-    return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <Appbar.Header>
-                <Appbar.BackAction onPress={() => navigation.goBack()} />
-                <Appbar.Content title="Add Pemasok" />
-            </Appbar.Header>
-
-            {complete && (
-                <ScrollView
-                    style={{
-                        marginVertical: 24,
-                        marginHorizontal: 24,
-                    }}>
-                    <View style={{ gap: 24 }}>
-                        <TextInput
-                            mode="outlined"
-                            value={pemasok.kodePemasok || ""}
-                            onChangeText={(text) => handleInput("kodePemasok", text)}
-                            label="Kode Pemasok"
-                        />
-
-                        <TextInput
-                            mode="outlined"
-                            value={pemasok.namaPemasok || ""}
-                            onChangeText={(text) => handleInput("namaPemasok", text)}
-                            label="Nama Pemasok"
-                        />
-
-                        <TextInput
-                            mode="outlined"
-                            value={pemasok.alamatPemasok || ""}
-                            onChangeText={(text) => handleInput("alamatPemasok", text)}
-                            label="Alamat Pemasok"
-                        />
-
-                        <TextInput
-                            mode="outlined"
-                            value={`${pemasok.teleponPemasok || ""}`}
-                            onChangeText={(text) => handleInput("teleponPemasok", parseInt(text))}
-                            keyboardType={"numeric"}
-                            label="Telepon Pemasok"
-                        />
-                        <Button onPress={pemasokCreate} mode="contained">
-                            Simpan
-                        </Button>
-                    </View>
-                </ScrollView>
-            )}
-
-            <WidgetBaseLoader complete={complete} />
-        </SafeAreaView>
-    );
+  return (
+    <>
+      <Appbar.Header>
+        <Appbar.BackAction
+          disabled={!complete}
+          onPress={() => navigation.goBack()}
+        />
+        <Appbar.Content title="Tambah Pemasok" />
+      </Appbar.Header>
+      <WidgetBaseLoader complete={complete} />
+      {complete && (
+        <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+          <View style={{ marginHorizontal: 16, gap: 16, marginVertical: 24 }}>
+            <TextInput
+              value={pemasok.kodePemasok || ""}
+              onChangeText={(text) => handleInput("kodePemasok", text)}
+              mode="outlined"
+              label="Kode Pemasok"
+            />
+            <TextInput
+              value={pemasok.namaPemasok || ""}
+              onChangeText={(text) => handleInput("namaPemasok", text)}
+              mode="outlined"
+              label="Nama Pemasok"
+            />
+            <TextInput
+              value={pemasok.alamatPemasok || ""}
+              onChangeText={(text) => handleInput("alamatPemasok", text)}
+              mode="outlined"
+              label="Alamat Pemasok"
+            />
+            <TextInput
+              value={pemasok.teleponPemasok || ""}
+              onChangeText={(text) => handleInput("teleponPemasok", text)}
+              mode="outlined"
+              label="Telepon Pemasok"
+            />
+            <Button
+              compact={false}
+              onPress={handleServicePemasokCreate}
+              mode="contained"
+            >
+              Simpan
+            </Button>
+          </View>
+        </ScrollView>
+      )}
+    </>
+  );
 };
 
 export default ScreenPemasokCreate;

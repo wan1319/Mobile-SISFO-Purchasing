@@ -50,18 +50,21 @@ const ScreenBarangCreate = ({ navigation }) => {
           }}>
           <View style={{ gap: 24 }}>
             <TextInput
+              mode="outlined"
               value={barang.kodeBarang || ""}
               onChangeText={(text) => handleInput("kodeBarang", text)}
               label="Kode Barang"
             />
 
             <TextInput
+              mode="outlined"
               value={barang.namaBarang || ""}
               onChangeText={(text) => handleInput("namaBarang", text)}
               label="Nama Barang"
             />
 
             <TextInput
+              mode="outlined"
               value={`${barang.hargaBeli || ""}`}
               onChangeText={(text) => handleInput("hargaBeli", parseInt(text))}
               returnKeyType={"next"}
@@ -70,6 +73,7 @@ const ScreenBarangCreate = ({ navigation }) => {
             />
 
             <TextInput
+              mode="outlined"
               value={`${barang.hargaJual || ""}`}
               onChangeText={(text) => handleInput("hargaJual", parseInt(text))}
               returnKeyType={"next"}
@@ -78,6 +82,7 @@ const ScreenBarangCreate = ({ navigation }) => {
             />
 
             <TextInput
+              mode="outlined"
               value={`${barang.jumlahBarang || ""}`}
               onChangeText={(text) =>
                 handleInput("jumlahBarang", parseInt(text))
