@@ -5,5 +5,4 @@ import ScreenPemasokCreate from './src/screens/pemasok/ScreenPemasokCreate';
 
 export default function App() {
   return <WidgetBaseDrawer />
-  
 }

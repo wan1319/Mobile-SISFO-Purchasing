@@ -77,7 +77,7 @@ const ScreenBarangEdit = ({ navigation, route }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Edit Barang" />
+        <Appbar.Content title="Edit Item" />
         <Appbar.Action icon="trash-can-outline" onPress={askDelete} />
       </Appbar.Header>
 

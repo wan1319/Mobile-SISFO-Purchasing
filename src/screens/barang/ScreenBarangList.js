@@ -56,7 +56,7 @@ const ScreenBarangList = ({ navigation }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <Appbar.Header>
                 <Appbar.Action icon="menu" onPress={navigation.toggleDrawer} />
-                <Appbar.Content title="Barang" />
+                <Appbar.Content title="Item" />
                 <Appbar.Action icon="refresh" onPress={refresh} />
                 <Appbar.Action
                     icon="arrow-left"

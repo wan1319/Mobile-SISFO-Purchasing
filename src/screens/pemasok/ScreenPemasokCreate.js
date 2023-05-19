@@ -5,6 +5,7 @@ import { ServicePemasokCreate } from "../../services/ServicePemasok";
 import { Appbar, Button, TextInput } from "react-native-paper";
 import WidgetBaseLoader from "../../widgets/base/WidgetBaseLoader";
 import { ScrollView, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const ScreenPemasokCreate = ({ navigation, route }) => {
   const [pemasok, setPemasok] = useState(SchemaPemasok);
@@ -31,7 +32,7 @@ const ScreenPemasokCreate = ({ navigation, route }) => {
   };
 
   return (
-    <>
+    <SafeAreaProvider>
       <Appbar.Header>
         <Appbar.BackAction
           disabled={!complete}
@@ -77,7 +78,7 @@ const ScreenPemasokCreate = ({ navigation, route }) => {
           </View>
         </ScrollView>
       )}
-    </>
+    </SafeAreaProvider>
   );
 };
 

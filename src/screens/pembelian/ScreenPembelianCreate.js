@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Appbar, Divider, TextInput } from "react-native-paper";
+import { Appbar, Divider, List, TextInput } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Platform, View, ScrollView } from "react-native";
 import _, { debounce, set, values } from "lodash";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { ServiceBaseHumanDate, ServiceBaseRandomID } from "../../services/ServiceBase";
+import { ServiceBaseHumanDate, ServiceBaseIsDuplicateArray, ServiceBaseRandomID } from "../../services/ServiceBase";
+import WidgetPemasokChoice from "../../widgets/pemasok/WidgetPemasokChoice";
+import WidgetBarangChoice from "../../widgets/barang/WidgetBarangChoice";
 
 const ScreenPembelianCreate = ({ navigation }) => {
     const [pembelian, setPembelian] = useState({});
@@ -14,21 +16,77 @@ const ScreenPembelianCreate = ({ navigation }) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
 
     const handleInput = (name, value) => {
-        if(name === "tanggal") setShowDatePicker(false);
+        if (name === "tanggal") setShowDatePicker(false);
         setPembelian((values) => ({ ...values, [name]: value }));
     };
 
+    const randomFaktur = () => {
+        handleInput("faktur", ServiceBaseRandomID("BUY"));
+    }
+
+    const addPemasok = (pemasok) => {
+        const debounce = _.debounce(() => setPemasok(pemasok), 100);
+        debounce();
+    };
+
+    const update = (item) => {
+        const debounce = _.debounce(() => {
+            setDaftarItemBeli((values) => {
+                const items = [...values];
+                const b = items.find((value) => value.kodeBarang === item.kodeBarang);
+                const i = items.findIndex(
+                    (value) => value.kodeBarang === item.kodeBarang
+                );
+
+                b.jumlahBeli = b.jumlahBeli + 1;
+                b.subtotal = b.jumlahBeli * b.hargaBeli;
+                items[i] = b;
+                return items;
+            });
+        }, 100);
+
+        debounce();
+    };
+
+    const add = (item) => {
+        const debounce = _.debounce(() => {
+            const payload = {
+                kodeBarang: item.kodeBarang,
+                namaBarang: item.namaBarang,
+                hargaBeli: item.hargaBeli,
+                jumlahBeli: 1,
+                subtotal: 1 * item.hargaBeli,
+            };
+
+            setDaftarItemBeli((values) => [...values, payload]);
+        }, 100);
+
+        debounce();
+    };
+
+    const addOrUpdate = (item) => {
+        const isDuplicate = ServiceBaseIsDuplicateArray(
+            daftarItemBeli,
+            item.kodeBarang,
+            "kodeBarang"
+        );
+
+        if (isDuplicate) {
+            update(item);
+        } else {
+            add(item);
+        }
+    };
+
+
     useEffect(() => {
+        setComplete(false);
         const debounce = _.debounce(() => {
             setComplete(true);
         }, 500);
 
         debounce();
     }, []);
-
-    const randomFaktur = () => {
-        handleInput("faktur", ServiceBaseRandomID("BUY"));
-    }
 
     return (
         <SafeAreaProvider style={{ flex: 1 }}>
@@ -44,7 +102,7 @@ const ScreenPembelianCreate = ({ navigation }) => {
                             mode="outlined"
                             value={pembelian.faktur}
                             onChange={(text) => handleInput("faktur", text)}
-                            label="Nomor Faktur"
+                            label="Invoice Number"
                             editable={false}
                             right={<TextInput.Icon onPress={() => randomFaktur()} icon="reload" />}
                         />
@@ -63,8 +121,19 @@ const ScreenPembelianCreate = ({ navigation }) => {
                             mode="date"
                             display={Platform.OS === "ios" ? "spinner" : "default"}
                             onChange={(event, value) => handleInput("tanggal", value)}
-                        /> 
+                        />
                     )}
+                    <WidgetPemasokChoice onPress={addPemasok} />
+
+                    {pemasok.kodePemasok && (
+                        <List.Item
+                            title={pemasok.namaPemasok}
+                            description={pemasok.teleponPemasok}
+                        />
+                    )}
+
+                    <Divider />
+                    <WidgetBarangChoice onPress={addOrUpdate} />
                 </ScrollView>
             )}
         </SafeAreaProvider>

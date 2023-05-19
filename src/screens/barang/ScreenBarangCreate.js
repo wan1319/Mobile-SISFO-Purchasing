@@ -39,7 +39,7 @@ const ScreenBarangCreate = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Tambah Barang" />
+        <Appbar.Content title="Add Item" />
       </Appbar.Header>
 
       {complete && (
