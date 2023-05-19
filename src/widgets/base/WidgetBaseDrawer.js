@@ -48,14 +48,14 @@ export default function WidgetBaseDrawer() {
                             />
                             <Drawer.Screen
                                 options={{
-                                    drawerLabel: "Pemasok",
+                                    drawerLabel: "Supplier",
                                 }}
                                 name="RouterPemasok"
                                 component={RouterPemasokAuthenticated}
                             />
                             <Drawer.Screen
                                 options={{
-                                    drawerLabel: "Pembelian",
+                                    drawerLabel: "Purchasing",
                                 }}
                                 name="RouterPembelian"
                                 component={RouterPembelianAuthenticated}

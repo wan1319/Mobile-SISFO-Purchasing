@@ -78,9 +78,9 @@ const ScreenPemasokList = ({ navigation }) => {
 
                 <DataTable>
                     <DataTable.Header>
-                        <DataTable.Title>Kode Pemasok</DataTable.Title>
-                        <DataTable.Title>Nama Pemasok</DataTable.Title>
-                        <DataTable.Title>Telepon Pemasok</DataTable.Title>
+                        <DataTable.Title>Supplier Code</DataTable.Title>
+                        <DataTable.Title>Supplier Name</DataTable.Title>
+                        <DataTable.Title>Supplier Phone</DataTable.Title>
                     </DataTable.Header>
 
                     {complete &&

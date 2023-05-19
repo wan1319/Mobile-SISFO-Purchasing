@@ -1,5 +1,7 @@
 import axios from "axios";
 import { Alert } from "react-native";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 
 export const ServiceBaseRequest = axios.create({
     timeout: 1000,
@@ -68,3 +70,18 @@ export const ServiceBaseIsDuplicateArray = (items, val, by) => {
     let flatItems = items.map((value) => value[by]);
     return flatItems.includes(val);
 };
+
+export const ServiceBaseFileSharing = (prefix, response) => {
+    const fr = new FileReader();
+
+    fr.onload = async () => {
+        const fileUri = `${
+            FileSystem.documentDirectory
+        }${prefix}_${new Date().getTime()}.xlxs`;
+        await FileSystem.writeAsStringAsync(fileUri, fr.result.split(",")[1], {
+            encoding: FileSystem.EncodingType.Base64,
+        });
+        Sharing.shareAsync(fileUri);
+    };
+    fr.readAsDataURL(response.data);
+}

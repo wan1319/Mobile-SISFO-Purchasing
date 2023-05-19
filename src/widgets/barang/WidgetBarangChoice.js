@@ -3,16 +3,29 @@ import { useState, useEffect } from "react";
 import { Modal, ScrollView } from "react-native";
 import { ActivityIndicator, Appbar, DataTable, List, Portal, Provider, Searchbar } from "react-native-paper";
 import WidgetBaseLoader from "../base/WidgetBaseLoader";
+import { ServiceBarangList } from "../../services/ServiceBarang";
 
 const WidgetBarangChoice = ({ onPress }) => {
     const [daftarBarang, setDaftarBarang] = useState([]);
     const [complete, setComplete] = useState(false);
     const [visible, setVisible] = useState(false);
 
-    useEffect(() => {
+    const handleBarangList = () => {
         setComplete(false);
-        const debounce = _.debounce(() => setComplete(true), 500);
+        const debounce = _.debounce(() => {
+            ServiceBarangList().then(({results}) => {
+                setDaftarBarang(results);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => setComplete(true));
+        }, 500)
         debounce();
+    }
+
+    useEffect(() => {
+        handleBarangList();
     }, []);
 
     return (
