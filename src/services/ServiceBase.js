@@ -85,3 +85,13 @@ export const ServiceBaseFileSharing = (prefix, response) => {
     };
     fr.readAsDataURL(response.data);
 }
+
+export const ServiceBaseHumanCurrency = (money, prefix = "Rp.") => {
+    if (money && typeof money === "number") {
+      return `${prefix} ${money
+        .toFixed(2)
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`;
+    }
+  
+    return "0";
+  };

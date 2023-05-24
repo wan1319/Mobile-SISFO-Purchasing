@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native";
 import { Appbar, DataTable, Searchbar } from "react-native-paper";
 import { ServicePemasokList } from "../../services/ServicePemasok";
 import WidgetBaseFABCreate from "../../widgets/base/WidgetBaseFABCreate";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native";
 import WidgetBaseLoader from "../../widgets/base/WidgetBaseLoader";
 
 const ScreenPemasokList = ({ navigation }) => {
